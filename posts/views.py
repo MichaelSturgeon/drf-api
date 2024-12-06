@@ -4,10 +4,13 @@
 # from rest_framework.response import Response
 
 from django.db.models import Count
+from rest_framework import generics, permissions, filters
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_api.permissions import IsOwnerOrReadOnly
 from .models import Post
 from .serializers import PostSerializer
-from drf_api.permissions import IsOwnerOrReadOnly
-from rest_framework import generics, permissions, filters
+
+
 
 
 # class PostList(APIView):
@@ -70,6 +73,16 @@ class PostList(generics.ListCreateAPIView):
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
+        DjangoFilterBackend,
+    ]
+
+    filterset_fields = [        
+        # Posts of users this profile is following
+        'owner__followed__owner__profile',
+        # Posts a user liked
+        'likes__owner__profile',
+        # Posts of a specific profile owner
+        'owner__profile',
     ]
 
     ordering_fields = [        
