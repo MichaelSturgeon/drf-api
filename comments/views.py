@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions
 from drf_api.permissions import IsOwnerOrReadOnly
 from .models import Comment
@@ -14,6 +15,15 @@ class CommentList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    filter_backends = [
+        DjangoFilterBackend,
+    ]
+
+    filterset_fields = [        
+        #  Return all comments for a givn post
+        'post',
+    ]
 
 
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):

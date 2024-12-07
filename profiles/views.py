@@ -57,6 +57,7 @@ class ProfileList(generics.ListAPIView):
         following_count=Count('owner__following', distinct=True)
     ).order_by('-created_at')
     serializer_class = ProfileSerializer
+    
     filter_backends = [
         filters.OrderingFilter,
         DjangoFilterBackend,
@@ -64,6 +65,8 @@ class ProfileList(generics.ListAPIView):
     filterset_fields = [        
         # Profiles following a profile, given its ID
         'owner__following__followed__profile',
+        # Profiles that are followed by a profile, given its ID
+        'owner__followed__owner__profile',
     ]
     ordering_fields = [
         'posts_count',
