@@ -1,6 +1,7 @@
 from pathlib import Path
 import cloudinary
 import os
+import dj_database_url
 
 if os.path.exists('env.py'):
     import env
@@ -20,8 +21,36 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication'
         if 'DEV' in os.environ
         else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
-    )]
+    )],
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+
+    # Python Documentation: time.strftime function
+    # https://docs.python.org/3/library/time.html#time.strftime
+
+    # DRF Documentation: datetime settings
+    # https://www.django-rest-framework.org/api-guide/settings/#date-and-time-formatting
+    'DATETIME_FORMAT': '%d %b %Y',
 }
+if 'DEV' not in os.environ:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
+        'rest_framework.renderers.JSONRenderer',
+    ]
+
+if 'DEV' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    }
+
+
 
 REST_USE_JWT = True
 JWT_AUTH_SECURE = True
@@ -36,12 +65,12 @@ REST_AUTH_SERIALIZERS = {
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6wb#ip0z2!i%o*pqxqwu4wmwrn)l_y!dnzo_k=#f*@%ttv2e!o'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'DEV' in os.environ
 
-ALLOWED_HOSTS = ['8000-michaelsturgeon-drfapi-xy4yb4zja0y.ws.codeinstitute-ide.net']
+ALLOWED_HOSTS = ['localhost', 'drf-api-w-project.herokuapp.com', '8000-michaelsturgeon-drfapi-xy4yb4zja0y.ws.codeinstitute-ide.net']
 
 
 # Application definition
@@ -64,6 +93,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
+    'corsheaders',
     
     'profiles',
     'posts',
@@ -76,6 +106,7 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -85,6 +116,21 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 ]
+
+if 'CLIENT_ORIGIN' in os.environ:
+     CORS_ALLOWED_ORIGINS = [
+         os.environ.get('CLIENT_ORIGIN')
+     ]
+else:
+     CORS_ALLOWED_ORIGIN_REGEXES = [
+         r"^https:\/\/.*\.codeinstitute-ide\.net$",
+     ]
+
+CORS_ALLOW_CREDENTIALS = True
+
+JWT_AUTH_COOKIE = 'my-app-auth'
+JWT_AUTH_REFRESH_COOKE = 'my-refresh-token'
+JWT_AUTH_SAMESITE = 'None'
 
 ROOT_URLCONF = 'drf_api.urls'
 
