@@ -2,6 +2,7 @@ from pathlib import Path
 import cloudinary
 import os
 import dj_database_url
+import re
 
 if os.path.exists('env.py'):
     import env
@@ -70,8 +71,12 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEV' in os.environ
 
-ALLOWED_HOSTS = ['localhost', 'drf-api-w-project.herokuapp.com', '8000-michaelsturgeon-drfapi-xy4yb4zja0y.ws.codeinstitute-ide.net']
-
+ALLOWED_HOSTS = [
+    os.environ.get('ALLOWED_HOST'),
+    'localhost',
+    # 'drf-api-w-project.herokuapp.com', 
+    # '8000-michaelsturgeon-drfapi-xy4yb4zja0y.ws.codeinstitute-ide.net'
+]
 
 # Application definition
 
@@ -117,14 +122,10 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-if 'CLIENT_ORIGIN' in os.environ:
-     CORS_ALLOWED_ORIGINS = [
-         os.environ.get('CLIENT_ORIGIN')
-     ]
-else:
-     CORS_ALLOWED_ORIGIN_REGEXES = [
+if 'CLIENT_ORIGIN_DEV' in os.environ:
+    CORS_ALLOWED_ORIGIN_REGEXES = [
          r"^https:\/\/.*\.codeinstitute-ide\.net$",
-     ]
+    ]
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -204,7 +205,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
