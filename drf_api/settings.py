@@ -7,15 +7,24 @@ import re
 if os.path.exists('env.py'):
     import env
 
+# CLOUDINARY_STORAGE = {
+#     'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
+# }
+
 CLOUDINARY_STORAGE = {
     'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
 }
+cloudinary.config(secure=True,)
+
 MEDIA_URL = '/media/'
+
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-cloudinary.config(secure=True,)
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [(
@@ -75,7 +84,7 @@ ALLOWED_HOSTS = [
     os.environ.get('ALLOWED_HOST'),
     'localhost',
     # 'drf-api-w-project.herokuapp.com', 
-    # '8000-michaelsturgeon-drfapi-xy4yb4zja0y.ws.codeinstitute-ide.net'
+    '8000-michaelsturgeon-drfapi-xy4yb4zja0y.ws.codeinstitute-ide.net'
 ]
 
 # Application definition
