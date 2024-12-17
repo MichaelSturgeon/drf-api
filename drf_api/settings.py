@@ -87,8 +87,9 @@ DEBUG = 'DEBUG' in os.environ
 ALLOWED_HOSTS = [
     os.environ.get('ALLOWED_HOST'),
     'localhost',
-    # 'drf-api-w-project.herokuapp.com', 
-    '8000-michaelsturgeon-drfapi-xy4yb4zja0y.ws.codeinstitute-ide.net'
+    'drf-api-w-project-2b5a13ae600c.herokuapp.com', 
+    '8000-michaelsturgeon-drfapi-xy4yb4zja0y.ws.codeinstitute-ide.net',
+    
 ]
 
 # Application definition
