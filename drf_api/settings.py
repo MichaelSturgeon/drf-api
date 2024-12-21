@@ -60,14 +60,7 @@ else:
         'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
     }
 
-REST_FRAMEWORK = {  
-    'DEFAULT_PERMISSION_CLASSES': [     
-        'rest_framework.permissions.IsAuthenticated', 
-    ], 
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication', 
-    ], 
-} 
+
 
 REST_USE_JWT = True
 JWT_AUTH_SECURE = True
@@ -186,7 +179,7 @@ DATABASES = {
 }
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.codeinstitute-ide.net",
+    "https://*.codeinstitute-ide.net/",
     "https://*.herokuapp.com",
 ]
 
